@@ -15,21 +15,7 @@
     "express": "^5.2.1",
     "mongoose": "^9.1.5"
   },
-  "engines":{
+  "engines": {
     "node": ">=18.0.0"
-  },
-  {
-  "version":2,
-  "build":[
-    {
-      "src":"server.js",
-      "use":"@vercel/node"
-    }
-  ],
-  "routes":[
-    {
-      "src":"/(.*)",
-      "dest":"server.js"
-    }
-  ]
+  }
 }
