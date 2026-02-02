@@ -72,7 +72,7 @@ app.post('/save-payment', async (req, res) => {
 
 //cloud connect 
 mongoose.connect(process.env.mongodb+srv://mussavir-shopkart:mussavir-shopkart@cluster0.7awjazq.mongodb.net/?appName=Cluster0)
-then(()=> console.log("Connected to MongoDB Atlas!"))
+.then(()=> console.log("Connected to MongoDB Atlas!"))
 .catch(err => console.error("Could not connect:",err));
 
 const PORT = process.env.PORT || 3000;
@@ -81,5 +81,6 @@ app.listen(PORT,() => {
     module.export = app;
     
 });
+
 
 
