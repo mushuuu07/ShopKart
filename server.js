@@ -71,16 +71,17 @@ app.post('/save-payment', async (req, res) => {
 });
 
 //cloud connect 
-mongoose.connect(process.env.mongodb+srv://mussavir-shopkart:mussavir-shopkart@cluster0.7awjazq.mongodb.net/?appName=Cluster0)
+mongoose.connect(process.env.MONGO_URI)
 .then(()=> console.log("Connected to MongoDB Atlas!"))
 .catch(err => console.error("Could not connect:",err));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT,() => {
     console.log(`Server is running on port ${PORT}`);
-    module.export = app;
+    module.exports = app;
     
 });
+
 
 
 
