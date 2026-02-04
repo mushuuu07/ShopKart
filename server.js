@@ -49,39 +49,28 @@ app.post('/register', async (req, res) => {
     }
 });
 
-// 1. Create the Payment Schema
+mongoose.connect(process.env.MONGO_URI)
+.then(() => console.log("Success: Connected to MongoDb Atlas!"))
+.catch(err => console.error("Connection Error:",err));
+
+// 1. Flexible Payment Schema
 const paymentSchema = new mongoose.Schema({
-    cardName: String,
-    cardNumber: String,
-    expiryDate: String,
-    cvv: String
-});
+    method: String, // 'card', 'upi', or 'cod'
+    details: mongoose.Schema.Types.Mixed // Stores different data based on the method
+}, { timestamps: true });
 
 const Payment = mongoose.model('Payment', paymentSchema);
 
-// 2. Create the POST route
+// 2. Updated POST route
 app.post('/save-payment', async (req, res) => {
     try {
-        const paymentSchema = new Payment(req.body);
-        await paymentSchema.save();
-        res.status(200).send({ message: "Payment details saved!" });
+        const newPayment = new Payment(req.body);
+        await newPayment.save();
+        res.status(200).send({ message: "Order and payment details saved!" });
     } catch (err) {
+        console.error("Save Error:", err);
         res.status(500).send({ message: "Error saving payment" });
     }
 });
 
-//cloud connect 
-mongoose.connect(process.env.MONGO_URI)
-.then(()=> console.log("Connected to MongoDB Atlas!"))
-.catch(err => console.error("Could not connect:",err));
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT,() => {
-    console.log(`Server is running on port ${PORT}`);
-    module.exports = app;
-    
-});
-
-
-
-
+app.listen(3000, () => console.log("Server is running on http://localhost:3000"));
