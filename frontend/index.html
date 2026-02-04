@@ -108,24 +108,50 @@
 </section>
 
 <section id="paymentPage" class="page">
-  <div class="form-box" style="max-width:500px;margin:auto;">
-    <h2 style="margin-bottom:20px;">Payment</h2>
+  <div class="payment-container">
+    <h2>Checkout</h2>
+    
+    <div class="method-selector">
+      <button class="method-btn active" onclick="showMethod('card')">Credit/Debit Card</button>
+      <button class="method-btn" onclick="showMethod('upi')">UPI</button>
+      <button class="method-btn" onclick="showMethod('cod')">Cash on Delivery</button>
+    </div>
 
-    <label>Card Holder Name</label>
-    <input type="text" id="card-name" style="margin-bottom:10px;">
+    <div class="form-box">
+      <div id="card-form" class="payment-method">
+        <label>Card Holder Name</label>
+        <input type="text" id="card-name" placeholder="John Doe">
 
-    <label>Card Number</label>
-    <input type="text" id="card-number" style="margin-bottom:10px;">
+        <label>Card Number</label>
+        <input type="text" id="card-number" placeholder="1234 5678 9101 1121">
 
-    <label>Expiry Date</label>
-    <input type="text" id="card-expiry" placeholder="MM/YY" style="margin-bottom:10px;">
+        <div class="row">
+          <div class="col">
+            <label>Expiry Date</label>
+            <input type="text" id="card-expiry" placeholder="MM/YY">
+          </div>
+          <div class="col">
+            <label>CVV</label>
+            <input type="text" id="card-cvv" placeholder="123">
+          </div>
+        </div>
+      </div>
 
-    <label>CVV</label>
-    <input type="text" id="card-cvv" style="margin-bottom:20px;">
+      <div id="upi-form" class="payment-method" style="display:none;">
+        <label>Enter UPI ID</label>
+        <input type="text" id="upi-id" placeholder="username@upi">
+        <p class="info-text">You will receive a request on your UPI app.</p>
+      </div>
 
-    <button class="btn btn-orange" onclick="savePaymentToMongo()" >Pay & Place Order</button>
+      <div id="cod-form" class="payment-method" style="display:none;">
+        <p class="info-text">Pay with cash upon delivery of your order.</p>
+        <p><strong>Total Amount: To be paid at doorstep</strong></p>
+      </div>
+
+      <button class="btn btn-orange" id="pay-btn" onclick="savePaymentToMongo()">Place Order</button>
+    </div>
   </div>
-</section> 
+</section>
 
 
 <section id="checkoutPage" class="page">
