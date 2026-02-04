@@ -159,6 +159,7 @@ function goToPayment() {
 
     if (!name || !email || !phone) {
         alert("Please fill all fields!");
+        showPage('loginPage');
         return;
     }
 
@@ -260,16 +261,40 @@ function goToPayment() {
 }
 
     //Payment Details
-    async function savePaymentToMongo() {
-    // 1. Collect data using the IDs from your HTML
-    const paymentData = {
-        cardName: document.getElementById('card-name').value,
-        cardNumber: document.getElementById('card-number').value,
-        expiryDate: document.getElementById('card-expiry').value, // Use a specific selector if ID is missing
-        cvv: document.getElementById('card-cvv').value 
-    };
+    let selectedMethod = 'card';
+
+// Switch between forms
+function showMethod(method) {
+    selectedMethod = method;
+    // Hide all forms
+    document.querySelectorAll('.payment-method').forEach(div => div.style.display = 'none');
+    document.querySelectorAll('.method-btn').forEach(btn => btn.classList.remove('active'));
+    
+    // Show selected
+    document.getElementById(`${method}-form`).style.display = 'block';
+    event.target.classList.add('active');
+}
+
+async function savePaymentToMongo() {
+    const paymentData = { method: selectedMethod, details:{}
+};
+
+    // Collect data based on chosen method
+    if (selectedMethod === 'card') {
+        paymentData.details = {
+            cardName: document.getElementById('card-name').value,
+            cardNumber: document.getElementById('card-number').value,
+            expiryDate: document.getElementById('card-expiry').value,
+            cvv: document.getElementById('card-cvv').value
+        };
+    } else if (selectedMethod === 'upi') {
+        paymentData.details = { upiId: document.getElementById('upi-id').value };
+    } else {
+        paymentData.details = { type: 'Cash on Delivery' };
+    }
 
     try {
+        // IMPORTANT: Use relative URL for hosting on Vercel/Render
         const response = await fetch('http://localhost:3000/save-payment', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -277,14 +302,16 @@ function goToPayment() {
         });
 
         if (response.ok) {
-            finalOrder(); // Call your existing final order function
+            alert("Order Placed Successfully!");
+            finalOrder(); 
+        } else {
+            alert("Failed to save order.");
         }
     } catch (error) {
         console.error("Error:", error);
-        alert("Could not save payment details.");
+        alert("Server error. Check your connection.");
     }
 }
-    
     function finalOrder() {
     const card = document.getElementById('card-number').value;
     if(!card) return alert("Enter card details!");
